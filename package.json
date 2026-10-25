@@ -1,0 +1,88 @@
+{
+  "name": "clipnest",
+  "version": "1.0.0",
+  "description": "ClipNest - 轻巧、漂亮的 Windows 剪贴板历史工具",
+  "main": "electron/main.js",
+  "author": "wth",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -k -n VITE,APP -c cyan,magenta \"vite --port 5187\" \"wait-on tcp:5187 && electron . --dev\"",
+    "start": "electron .",
+    "build": "vite build",
+    "icons": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate-icons.ps1",
+    "dist": "npm run build && electron-builder --win nsis portable",
+    "dist:dir": "npm run build && electron-builder --win dir",
+    "pack": "npm run build && electron-builder --dir"
+  },
+  "dependencies": {
+    "koffi": "^3.3.4",
+    "lucide-react": "^1.61.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "concurrently": "^10.0.6",
+    "electron": "39.8.10",
+    "electron-builder": "^26.18.0",
+    "vite": "^8.3.5",
+    "wait-on": "^9.5.1"
+  },
+  "build": {
+    "appId": "com.clipnest.app",
+    "productName": "ClipNest",
+    "copyright": "Copyright © 2026 wth",
+    "asar": true,
+    "electronDist": "node_modules/electron/dist",
+    "asarUnpack": [
+      "node_modules/koffi/**"
+    ],
+    "directories": {
+      "output": "release",
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "assets/icon.ico",
+      "assets/tray.ico",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "artifactName": "ClipNest-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "artifactName": "ClipNest-Setup-${version}-${arch}.${ext}",
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ClipNest",
+      "deleteAppDataOnUninstall": false
+    },
+    "portable": {
+      "artifactName": "ClipNest-Portable-${version}-${arch}.${ext}"
+    }
+  },
+  "allowScripts": {
+    "electron": true,
+    "koffi@3.3.4": true
+  }
+}
